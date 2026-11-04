@@ -1,0 +1,40 @@
+// The setup is built before /api/config arrives. Key storage UI must not stop startup.
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const elements=new Map(),created=[];
+function make(){return {childNodes:[{},{}],classList:{add(){},remove(){},toggle(){}},append(){},prepend(){},before(){},insertBefore(){},setAttribute(){},addEventListener(){},querySelector(){return make();}};}
+function get(id){return created.find(n=>n.id===id) || elements.get(id) || (elements.set(id,make()),elements.get(id));}
+const context=vm.createContext({document:{getElementById:get,querySelector:()=>make(),createElement:()=>{const n=make();created.push(n);return n;},createTextNode:text=>({textContent:text})},console});
+vm.runInContext(fs.readFileSync('web/app.js','utf8').replace('initialize().catch(showError);',''),context);
+vm.runInContext('app.config=null;initializeSimpleSetup();',context);
+assert.equal(get('inline-remember-key').checked,true);
+assert.equal(get('inline-remember-key').disabled,false);
+vm.runInContext('app.config={key_configured:false,keychain_available:false,model:"gemini-test"};settingsStatus();',context);
+assert.equal(get('inline-remember-key').disabled,true);
+assert.match(vm.runInContext('aiFailureHint({message:"Gemini quota or rate limit reached"})',context),/same project shares that project/);
+assert.match(vm.runInContext('aiFailureHint({diagnostics:{http_status:503},message:"HTTP 503"})',context),/temporarily busy/);
+assert.match(vm.runInContext('aiFailureHint({message:"AI supplied an unverified quotation"})',context),/app rejected claims/);
+console.log('Remember-key UI startup: passed');
+vm.runInContext('app.config={key_configured:false,model:"meta"};settingsStatus();',context);
+assert.equal(get('ai-model').value,'meta');
+assert.equal(get('meta-key-fields').hidden,false);
+console.log('Meta-only provider settings: passed');
+assert.equal(get('ai-usage-mode').value,'complete');
+assert.match(get('ai-usage-help').textContent,/Complete investigation/);
+assert.match(get('ai-usage-help').textContent,/Up to 12 requests per review/);
+get('ai-usage-mode').value='complete';
+vm.runInContext('usageSettings()',context);
+assert.match(get('ai-usage-help').textContent,/20 per repair action/);
+get('settings-dialog').open=true;
+vm.runInContext('app.config.ai_usage_mode="complete";settingsStatus()',context);
+assert.equal(get('ai-usage-mode').value,'complete','Polling must preserve an unsaved usage selection');
+vm.runInContext('settingsStatus(true)',context);
+assert.equal(get('ai-usage-mode').value,'complete');
+console.log('Usage defaults, limits and settings draft preservation: passed');
+vm.runInContext('app.config={model:"meta/muse-spark-1.3-contributor",provider:"Meta",meta_model:"muse-spark-1.3-contributor",meta_key_configured:true,key_configured:true};settingsStatus(true)',context);
+assert.equal(get('ai-model').value,'meta');
+assert.equal(get('meta-model').textContent,'muse-spark-1.3-contributor');
+assert.equal(get('meta-key-fields').hidden,false);
+assert.equal(get('ai-status').textContent,'Vector settings');
+vm.runInContext('providerSettings()',context);
+assert.equal(get('meta-key-fields').hidden,false);
+console.log('Meta provider selection, Vector branding, locked Contributor model: passed');

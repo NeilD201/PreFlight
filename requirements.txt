@@ -1,0 +1,4 @@
+pypdf[crypto]==6.19.0
+
+pypdfium2==5.13.0
+Pillow==12.3.0

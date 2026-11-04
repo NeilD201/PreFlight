@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PCB Preflight</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/refresh.css">
+  <script src="/workflow.js" defer></script>
+  <link rel="stylesheet" href="/command.css">
+  <link rel="stylesheet" href="/livescan.css">
+  <script src="/command.js" defer></script>
+  <script src="/design.js" defer></script>
+  <script src="/file_fixes.js" defer></script>
+  <script src="/fix_design.js" defer></script>
+  <script src="/firmware.js" defer></script>
+  <script src="/manufacturing.js" defer></script>
+  <script src="/release.js" defer></script>
+  <script src="/locations.js" defer></script>
+  <script src="/overview.js" defer></script>
+  <script src="/product-context.js" defer></script>
+  <script src="/editor-connections.js" defer></script>
+  <script src="/usage.js" defer></script>
+  <script src="/app.js" defer></script>
+  <script src="/breadboard.js" defer></script>
+  <script src="/scanmath.js" defer></script>
+  <script type="module" src="/livetwin.js"></script>
+  <script src="/livescan.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace-main">Skip to workspace</a>
+  <header class="app-header">
+    <a class="brand" href="/" aria-label="PreFlight home"><img class="brand-logo" src="/preflight-logo.png" alt="PreFlight" width="1821" height="546"></a>
+    <span id="app-version" class="version-pill" title="PreFlight app version">…</span>
+    <nav aria-label="Main navigation">
+      <button id="nav-start" class="nav-item active" type="button" aria-current="page">Start</button>
+      <button id="nav-history" class="nav-item">Projects <span id="history-count" class="nav-count">0</span></button>
+      <button id="nav-workspace" class="nav-item">Review</button>
+    <button id="nav-livescan" class="nav-item" type="button" hidden>Breadboard</button>
+    <button id="nav-chat" class="nav-item" type="button">Vector chat</button>
+    <button id="nav-checks" class="nav-item" type="button">What we check</button>
+    <button id="nav-editors" class="nav-item" type="button">Editors</button>
+    </nav>
+    <div class="header-settings"><button id="usage-pill" class="status-pill usage-pill" type="button" aria-label="Meta API usage"><svg class="usage-icon" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/><path d="M6 1a5 5 0 0 1 5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span id="usage-cost">$0.0000</span><span id="usage-model" class="usage-model"></span><span id="usage-tokens" class="usage-tokens">0 tok</span></button><span class="local-label"><i aria-hidden="true"></i> On this Mac</span><button id="ai-status" class="status-pill">Vector settings</button></div>
+  </header>
+  <main id="workspace-main" tabindex="-1">
+    <div class="topbar" hidden><span id="breadcrumb">Workspace</span></div>
+    <div id="error-banner" class="error-banner" role="alert" hidden><span id="error-text"></span><button id="dismiss-error" aria-label="Dismiss error">×</button></div>
+    <section id="start-view" class="page"><div class="page-heading"><div><div class="eyebrow">PreFlight</div><h1>What are you building today?</h1><p>Check a finished PCB design, or scan a physical breadboard and reconstruct it.</p></div></div><div class="start-cards"><button id="start-checker" class="start-card" type="button"><span class="eyebrow">PCB Checker</span><span class="start-title">Check a KiCad project</span><span class="muted">Connect your KiCad schematics and PCB files, run engineering checks, and investigate findings with VECTOR.</span></button><button id="start-livescan" class="start-card" type="button" hidden><span class="eyebrow">Breadboard to PCB</span><span class="start-title">Scan a breadboard</span><span class="muted">Capture your physical circuit, rebuild it as an interactive 3D twin, and verify the wiring. <em>LiveScan preview.</em></span></button></div></section>
+    <section id="livescan-view" class="page" hidden><div class="page-heading"><div><div class="eyebrow">Breadboard to PCB · LiveScan preview</div><h1 id="livescan-title">Breadboard project</h1><p id="livescan-subtitle">Describe your build, capture the board, and reconstruct it in 3D.</p></div><span class="outline-tag">LOCAL WORKSPACE</span></div><div id="livescan-root"></div></section>
+    <section id="workspace-view" class="page" hidden>
+      <div class="page-heading"><div><div class="eyebrow">Your board</div><h1 id="project-title">Check your board before ordering.</h1><p id="project-subtitle">Open a KiCad folder or ZIP to see the board, the issues, and the next steps.</p></div><span class="outline-tag">LOCAL WORKSPACE</span></div>
+      <details id="source-panel" class="panel source-panel" open>
+        <summary><span>Project input</span><span class="summary-hint">Folder or KiCad ZIP <span aria-hidden="true">⌄</span></span></summary>
+        <form id="run-form">
+          <div id="revision-input-note" class="revision-input-note" hidden><strong>Checking your updated version</strong><p>Save your changes in KiCad, then click Update. A connected local folder is read again automatically. We’ll check it again and compare it with the version you opened.</p><button id="cancel-revision" type="button" class="text-link">Run as a separate project instead</button></div><div class="project-name-row"><label for="project-name">Project name</label><input id="project-name" maxlength="120" required placeholder="Give this board a name"><p class="field-help">Use the same name for each revision to keep its runs together.</p></div>
+          <div class="source-grid">
+            <div>
+              <div id="path-input"><button type="button" id="choose-local-folder" class="secondary">Choose KiCad folder…</button> <button type="button" id="use-connected-project" class="secondary">Use last connected project</button><label for="project-path">Project location</label><input id="project-path" type="text" spellcheck="false" placeholder="/path/to/your/KiCad/project" required><p class="field-help">This is the same folder KiCad saves into. Save in KiCad, then click Update to read your latest changes.</p></div>
+            </div>
+            <div class="run-options"><label class="check-option"><input id="use-ai" type="checkbox"><span><strong>Include Vector review</strong><small>Review circuit evidence with Meta Muse Spark.</small></span></label><p id="key-hint" class="field-help">Add a key in Review settings to enable Vector.</p><button id="run-button" class="primary run-button" type="submit">Check my board</button></div>
+          </div>
+          <details class="advanced"><summary>Check options &amp; an optional question for Vector</summary><div class="advanced-content"><label class="check-option"><input id="use-native" type="checkbox" checked><span>Run KiCad netlist, ERC and DRC checks</span></label><label for="initial-question">Ask something specific <span class="muted">(with Vector review)</span></label><textarea id="initial-question" maxlength="4000" rows="2" placeholder="Which issues could actually stop this board from working?"></textarea><div class="two-cols"><div><label for="source-sch">Schematic inside project <span class="muted">(optional)</span></label><input id="source-sch" placeholder="Auto-select"></div><div><label for="source-pcb">PCB inside project <span class="muted">(optional)</span></label><input id="source-pcb" placeholder="Auto-select"></div></div><p class="field-help">Select a source only if the project contains multiple boards or root schematics.</p></div></details>
+          <details class="advanced"><summary>Assembly files &amp; coordinate units</summary><div class="advanced-content"><p class="field-help">Put the BOM and placement CSVs in your folder or ZIP. A single file of each type is selected automatically.</p><div class="two-cols"><div><label for="source-bom">BOM CSV inside project</label><input id="source-bom" placeholder="Auto-select"></div><div><label for="source-cpl">Placement CSV inside project</label><input id="source-cpl" placeholder="Auto-select"></div></div><label for="cpl-units">Placement coordinate units</label><select id="cpl-units"><option value="auto">Read explicit units; flag if unspecified</option><option value="mm">I confirm coordinates are in millimetres</option><option value="in">I confirm coordinates are in inches</option></select><p class="field-help">Position origins and rotation conventions still need review with the assembler.</p></div></details>
+        </form>
+      </details>
+      <section id="job-panel" class="panel job-panel" aria-live="polite" hidden><div class="job-heading"><span id="job-symbol" class="spinner" aria-hidden="true"></span><div><strong id="job-title">Starting checks</strong><p id="job-message"></p></div><span id="job-time" class="mono muted"></span><button id="cancel-check" class="text-button" type="button" hidden>Stop check</button></div><details><summary>Activity log</summary><ol id="job-events"></ol></details></section>
+      <section id="empty-state" class="empty-state"><div class="empty-number">01 / 03</div><h2>Start with a KiCad project.</h2><p>Press “Check my board” once. Then use the board map to find what matters, read the suggested steps, and export your assembly files.</p><div class="empty-steps"><span><b>01</b> Connect your KiCad folder</span><span><b>02</b> Inspect the board</span><span><b>03</b> Work through fixes</span></div></section>
+      <section id="results" hidden>
+        <div id="workflow-strip" class="workflow-strip" hidden>
+          <span id="workflow-dot" class="workflow-dot idle" aria-hidden="true"></span>
+          <span id="workflow-status-text" class="workflow-status">No investigation recorded yet</span>
+          <span id="workflow-elapsed" class="mono">—</span>
+          <button id="workflow-toggle" class="secondary" aria-expanded="false" aria-controls="workflow-live">View live workflow</button>
+        </div>
+        <div id="workflow-shell" class="workflow-shell"><div id="workflow-live"><div id="deck">
+          <aside id="rail" aria-label="Investigation status"><div class="rail-title"><h1>VECTOR <span>Command Center</span></h1><p id="src-banner" class="src">Loading investigation…</p></div><dl id="rail-stats"></dl><div class="legend" aria-label="Status legend"><h2>Reading the board</h2><ul><li><i class="dot ok"></i>Executed · evidence recorded</li><li><i class="dot warn"></i>Partial · limited evidence</li><li><i class="dot bad"></i>Failed or unavailable</li><li><i class="dot idle"></i>Never invoked</li></ul><p class="note">Only stages with recorded events light up. Dim stages did not execute.</p></div></aside>
+          <main id="stage"><div id="canvas-wrap"><svg id="graph" role="img" aria-label="VECTOR investigation topology"></svg><div id="zoombar" role="toolbar" aria-label="Graph zoom"><button id="zin" type="button" aria-label="Zoom in">+</button><button id="zout" type="button" aria-label="Zoom out">−</button><button id="zreset" type="button">Reset view</button></div></div><div id="transport" aria-label="Replay controls"><button id="play" type="button" aria-label="Play replay">▶</button><input id="scrub" type="range" min="0" max="100" value="100" step="1" aria-label="Replay position"><span id="tick" class="mono">—</span></div><p class="field-help">Live view of the current run’s investigation. Recorded demo data lives on the <a href="/command?demo">standalone Command Center demo</a>, never mixed into this view.</p></main>
+          <aside id="inspector" aria-label="Node detail" aria-live="polite"><p class="empty">Select a stage to inspect its real claims, evidence and activity.</p></aside>
+        </div></div></div>
+        <section id="revision-progress" class="panel revision-progress" aria-label="Progress since your previous version"></section>
+        <section id="panel-overview" role="tabpanel" aria-labelledby="tab-connections"><div id="overview-intro"></div><div id="overview-main"></div><section id="schematic-status" class="panel"></section><div id="overview-assembly"></div><div id="overview-coverage"></div></section>
+        <section id="design-panel" class="panel design-panel"></section>
+        <section id="assembly-downloads" class="panel assembly-downloads"></section>
+        <details class="coverage-disclosure"><summary>Checks run &amp; remaining gaps</summary><section id="readiness" class="panel readiness-panel"></section></details>
+        <div class="result-top"><div><span class="eyebrow">PREFLIGHT RESULTS</span><h2 id="result-headline"></h2><p id="result-explanation" class="muted"></p></div><div id="downloads" class="downloads"><a id="download-bundle" class="button primary" download>Export review package ↓</a><a id="download-html" class="text-link" download>HTML report ↗</a><a id="download-json" class="text-link" download>JSON</a></div></div>
+        <div id="metrics" class="metrics"></div>
+        <section id="panel-actions" role="tabpanel" aria-labelledby="tab-actions"><div class="plan-toolbar"><div><h2>Action list</h2><p id="plan-status" class="field-help"></p></div><select id="plan-filter" aria-label="Filter change plan"><option value="active">Changes &amp; investigations</option><option value="schematic">Schematic wiring</option><option value="intentional">Explained as intentional</option><option value="all">All checks, including cosmetic</option></select></div><div id="change-plan" class="card-list"></div><section id="step-chat" class="step-chat" aria-label="Issue chat"></section></section>
+        <section id="panel-datasheets" role="tabpanel" aria-labelledby="tab-datasheets" hidden><div id="datasheet-list"></div></section>
+        <div class="tabs" role="tablist" aria-label="Results"><button role="tab" id="tab-findings" aria-selected="true" aria-controls="panel-findings" tabindex="0" data-tab="findings">What matters <span id="attention-count"></span></button><button role="tab" id="tab-assembly" aria-selected="false" aria-controls="panel-assembly" tabindex="-1" data-tab="assembly">Assembly &amp; parts</button><button role="tab" id="tab-changes" aria-selected="false" aria-controls="panel-changes" tabindex="-1" data-tab="changes">Compare runs</button><button role="tab" id="tab-ai" aria-selected="false" aria-controls="panel-ai" tabindex="-1" data-tab="ai">Vector review</button><button role="tab" id="tab-components" aria-selected="false" aria-controls="panel-components" tabindex="-1" data-tab="components">Components</button><button role="tab" id="tab-nets" aria-selected="false" aria-controls="panel-nets" tabindex="-1" data-tab="nets">Nets</button><button role="tab" id="tab-coverage" aria-selected="false" aria-controls="panel-coverage" tabindex="-1" data-tab="coverage">Coverage &amp; raw</button></div>
+        <section id="panel-findings" role="tabpanel" aria-labelledby="tab-findings"><div class="filterbar"><input id="finding-search" type="search" aria-label="Search findings, references or evidence…" placeholder="Search findings, references or evidence…"><select id="finding-category" aria-label="Filter findings"><option value="attention">Needs attention</option><option value="all">All findings</option><option value="signal">Signal paths</option><option value="electrical">Circuit / connectivity</option><option value="manufacturing">Fabrication limits</option><option value="assembly">Assembly</option><option value="documentation">Schematic / libraries</option><option value="cosmetic">Cosmetic</option><option value="expected">Expected / excluded</option><option value="coverage">Checks unavailable</option></select></div><p id="finding-count" class="field-help"></p><div id="finding-list" class="card-list"></div></section>
+        <section id="panel-ai" role="tabpanel" aria-labelledby="tab-ai" hidden><div id="ai-content"></div><form id="ask-form" class="panel ask-form" hidden><label for="followup-question">Ask about this run</label><p class="field-help">Uses the saved review evidence. KiCad checks and the full review do not run again.</p><textarea id="followup-question" maxlength="4000" rows="3" required placeholder="Explain the U8 exposed-pad finding and what I should check next."></textarea><div class="ask-footer"><span class="muted">Answers are Vector interpretations with links to evidence.</span><button id="ask-button" class="primary" type="submit">Send question</button></div></form></section>
+        <section id="panel-assembly" role="tabpanel" aria-labelledby="tab-assembly" hidden><div id="assembly-content"></div><div class="filterbar"><input id="parts-search" type="search" aria-label="Search parts to source" placeholder="Search reference, value, MPN or supplier code…"><select id="parts-filter" aria-label="Filter parts"><option value="fitted">Fitted components</option><option value="needs_part_number">Missing part numbers</option><option value="conflicting_identity">Conflicting identities</option><option value="all">All components</option></select></div><div id="parts-table"></div></section>
+        <section id="panel-changes" role="tabpanel" aria-labelledby="tab-changes" hidden><div class="panel comparison-controls"><h3>What changed since the last revision?</h3><p class="field-help">Compare findings, parts, placements and net members. Decisions apply only to the run where they were recorded.</p><label for="baseline-run">Baseline run from this project</label><select id="baseline-run"></select><button id="compare-button" class="primary" type="button">Compare with current run</button></div><div id="comparison-result"></div></section>
+        <section id="panel-components" role="tabpanel" aria-labelledby="tab-components" hidden><div class="filterbar"><input id="component-search" type="search" aria-label="Search components" placeholder="Search by reference, value or footprint…"></div><div id="component-list" class="card-list"></div></section>
+        <section id="panel-nets" role="tabpanel" aria-labelledby="tab-nets" hidden><div class="filterbar"><input id="net-search" type="search" aria-label="Search nets" placeholder="Search a net or connected pin…"></div><p class="field-help">Schematic pins and PCB pad assignments. Physical routing is checked separately by KiCad DRC.</p><div id="net-list" class="card-list"></div></section>
+        <section id="panel-coverage" role="tabpanel" aria-labelledby="tab-coverage" hidden><div id="coverage-content"></div><h3 class="section-heading">Original rule findings</h3><p class="field-help">Original severities are preserved. A rule count is not a count of failed parts.</p><div class="filterbar"><input id="raw-search" type="search" aria-label="Search raw findings" placeholder="Search original rule findings…"><select id="raw-severity" aria-label="Filter raw severity"><option value="all">All severities</option><option value="error">Errors</option><option value="warning">Warnings</option><option value="info">Information</option></select></div><div id="raw-list" class="card-list"></div></section>
+      </section>
+    </section>
+    <section id="chat-view" class="page" aria-label="Chat" hidden><section id="panel-chat"><div id="chat-home"></div></section></section>
+    <section id="checks-view" class="page" aria-label="What we check" hidden><div id="checks-home"></div></section>
+    <section id="history-view" class="page" hidden><div class="page-heading"><div><div class="eyebrow">Project library</div><h1>Projects</h1><p>Search your projects, reopen a review, and compare the next revision.</p></div><button id="refresh-history" class="secondary">Refresh</button></div><div class="filterbar"><input id="history-search" type="search" aria-label="Search saved projects" placeholder="Search project names…"><select id="history-project" aria-label="Filter saved projects"><option value="">All projects</option></select></div><p id="history-page-label" class="field-help"></p><div id="history-list" class="card-list"></div><div class="pagination"><button id="history-prev" class="secondary">← Previous</button><button id="history-next" class="secondary">Next →</button></div></section>
+    <footer><strong>PreFlight</strong><span>Design review workspace</span><span class="footer-limit">Results apply to the saved revision and checks shown.</span></footer>
+  </main>
+  <dialog id="settings-dialog"><form id="settings-form">
+    <div class="dialog-heading"><div><div class="eyebrow">Vector connection</div><h2>Vector settings</h2></div><button type="button" id="close-settings" class="icon-button" aria-label="Close settings">×</button></div>
+    <p class="settings-intro">Connect Meta Muse Spark for circuit review and repair planning.</p><label for="ai-model">Primary model</label><select id="ai-model"><option value="meta">Meta · Spark 1.3 Contributor</option></select>
+    <section id="meta-key-fields" class="settings-provider" hidden><label for="meta-api-key">Meta API key</label><input id="meta-api-key" type="password" autocomplete="off" spellcheck="false" placeholder="Blank keeps your saved Meta key"><p class="field-help">Model: <strong id="meta-model">muse-spark-1.3-contributor</strong> · Contributor billing $0.10 in / $0.002 cached / $0.20 out per 1M tokens</p><p id="meta-key-status" class="field-help"></p><p class="field-help">Uses Meta’s Model API. Contributor requests may be used by Meta to improve its models. Project chat is supported; web search grounds answers with cited sources.</p></section>
+    <label for="ai-usage-mode">Vector usage</label>
+    <select id="ai-usage-mode"><option value="complete">Complete investigation · full evidence, challenge loops and repair retries</option></select>
+    <p id="ai-usage-help" class="field-help">Complete investigation: up to 12 requests per review, 20 per repair action, 4 per chat answer and 8 per firmware plan. Analysis output up to 80k tokens per evidence request (160k for design reviews), well under the model's shared context budget; repair proposals stay small and strictly validated. Limits reset for each action; the euro spending cap in usage tracking still applies.</p>
+    <p class="field-help">Save settings is free. Save &amp; test sends one small paid request. Opening the app does not test the key.</p>
+    <p id="settings-key-status" class="field-help"></p><label class="check"><input id="remember-key" type="checkbox" checked> Remember the Meta key on this Mac</label>
+    <p class="field-help">Keys stay in macOS Keychain, outside reports and browser storage.</p>
+    <p class="privacy-note">Vector sends the circuit evidence needed for the request to Meta only; there is no automatic provider fallback. Save &amp; test checks the Meta key with one small request.</p>
+    <details class="field-help"><summary>External connections</summary>
+      <p><strong>Meta:</strong> Vector reviews, questions and repair planning send selected design evidence and your context to Meta Muse Spark.</p>
+      <p><strong>LCSC:</strong> part searches send part numbers, values and packages; the app downloads product information and datasheets.</p>
+      <p><strong>Reference documents:</strong> supported checks may download public PDFs or layouts from Microchip, Analog Devices, Nordic and Johanson.</p>
+      <p>KiCad checks, project files and saved reports stay on this computer. Manufacturer comparisons use built-in profiles; the app does not place orders. No analytics or tracking service is connected.</p>
+    </details>
+    <p id="settings-message" class="settings-message" role="status"></p><div class="dialog-actions"><button type="button" id="forget-key" class="text-button">Forget all keys</button><button type="button" id="test-ai" class="secondary">Save &amp; test</button><button type="submit" id="save-settings" class="primary">Save settings</button></div>
+  </form></dialog>
+  <dialog id="editors-dialog" class="editors-dialog" aria-labelledby="editors-title">
+    <div class="editor-dialog-heading"><div><h2 id="editors-title">Editor connections</h2><p>Track changes to the original files on this computer.</p></div><button id="close-editors" type="button" class="text-button" aria-label="Close editor connections">×</button></div>
+    <div id="editor-connection-list" aria-live="polite"></div>
+    <form id="editor-connect-form">
+      <h3>Connect a project</h3>
+      <label for="editor-kind">Design editor</label><select id="editor-kind"></select>
+      <p id="editor-format-help" class="field-help"></p>
+      <p id="editor-coverage" class="editor-coverage"></p>
+      <button id="pick-editor-files" type="button" class="primary">Select original files</button>
+      <details class="editor-paths"><summary>Enter file paths instead</summary><label for="editor-file-paths">Full file paths, one per line</label><textarea id="editor-file-paths" rows="4" spellcheck="false" placeholder="/path/to/project/board.kicad_pro"></textarea><button type="submit" class="secondary">Connect these files</button></details>
+      <p id="editor-connect-message" role="status"></p>
+      <p class="field-help">Save in your editor. Preflight detects changes within about 6 seconds while the local app is running. Monitoring uses no AI credits and does not modify your design. Run a review to analyze a new save.</p>
+      <details><summary>Cloud editors and analysis support</summary><p>KiCad reviews are supported. Fusion has an experimental save-export add-in. Other connections track local files only; native circuit and layout readers for these formats are not implemented.</p><p>EasyEDA browser and Pro editor adapters are not included yet. Selecting a downloaded or exported file watches that copy only.</p></details>
+    </form>
+  </dialog>
+  <dialog id="usage-dialog" class="usage-dialog" aria-labelledby="usage-title">
+    <div class="dialog-heading"><div><div class="eyebrow">Meta Model API</div><h2 id="usage-title">API usage</h2></div><button id="close-usage" type="button" class="icon-button" aria-label="Close usage">×</button></div>
+    <div id="usage-detail"></div>
+    <form id="usage-budget-form">
+      <h3>Local budget</h3>
+      <div class="usage-budget-grid"><label>Budget (USD)<input id="usage-budget" type="number" min="0" max="1000000" step="1"></label><label>First warning<input id="usage-warn" type="number" min="0" max="1000000" step="1"></label><label>Second warning<input id="usage-warn-high" type="number" min="0" max="1000000" step="1"></label></div>
+      <p id="usage-budget-message" class="field-help" role="status"></p>
+      <div class="dialog-actions"><button type="submit" class="primary">Save budget</button></div>
+    </form>
+    <p class="field-help">Estimated API cost from reported tokens at Contributor rates ($0.10 in / $0.002 cached / $0.20 out per 1M). This local budget is not your Meta account balance.</p>
+  </dialog>
+  <noscript>This local app needs JavaScript. You can also run python3 main.py in Terminal.</noscript>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "autodeskProduct": "Fusion360",
+  "type": "addin",
+  "author": "Preflight",
+  "description": {"": "Export the connected Electronics design to local Preflight after saving. Experimental; uses the Fusion Electronics preview API."},
+  "supportedOS": "windows|mac",
+  "editEnabled": true,
+  "runOnStartup": false
+}

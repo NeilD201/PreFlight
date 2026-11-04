@@ -1,0 +1,27 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const queue=[];
+const context=vm.createContext({console,setTimeout:fn=>queue.push(fn)});
+vm.runInContext(`const app={busy:false,adding:false,config:{key_configured:true},snapshot:{report_id:'r1',job:{id:'j1',status:'completed',needs_product_context:true}},project:{ai_review:{status:'needs_context',resume_ai:false},workspace:{design_context:{revision:1,product_context:{}}}}};let errors=[],requests=[];const showError=e=>errors.push(e.message);const rethink=async d=>requests.push(d);`,context);
+vm.runInContext(fs.readFileSync('web/product-context.js','utf8'),context);
+(async()=>{
+  vm.runInContext("app.view='workspace'",context);
+  vm.runInContext(`interviewProduct=async()=>null;maybeAskProductQuestions();maybeAskProductQuestions();`,context);
+  assert.equal(queue.length,1,'Repeated polling opens one conversation');await queue.shift()();
+  assert.equal(vm.runInContext('requests.length',context),0,'Cancel makes no review request');
+  vm.runInContext(`interviewProduct=async()=>({purpose:'test'});`,context);
+  await vm.runInContext('editProductContext()',context);
+  assert.equal(vm.runInContext('requests[0].ai',context),false,'Preserve the user’s AI-off setting after intake');
+  vm.runInContext(`app.project.ai_review.resume_ai=true;`,context);
+  await vm.runInContext('editProductContext()',context);
+  assert.equal(vm.runInContext('requests[1].ai',context),false,'A configured key alone never approves paid AI');
+  vm.runInContext(`productInterview.confirmAI=async()=>true;`,context);
+  await vm.runInContext('editProductContext()',context);
+  assert.equal(vm.runInContext('requests[2].ai',context),true,'Explicit confirmation runs the investigation');
+  vm.runInContext(`interviewProduct=async()=>{app.snapshot.report_id='changed';return {};};`,context);
+  await vm.runInContext('editProductContext()',context);
+  assert.equal(vm.runInContext('requests.length',context),3,'Changed report must not receive answers');
+  assert.match(vm.runInContext('errors[0]',context),/review changed/);
+  vm.runInContext(`app.adding=true;app.snapshot.job.id='j2';maybeAskProductQuestions();`,context);
+  assert.equal(queue.length,0,'Do not interrupt adding another project');
+  console.log('File-based questions: duplicate polling, cancellation, AI setting and report isolation passed');
+})().catch(error=>{console.error(error);process.exitCode=1;});

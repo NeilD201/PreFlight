@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VECTOR Investigation Command Center</title>
+<link rel="stylesheet" href="/command.css">
+</head>
+<body>
+<div id="deck">
+  <aside id="rail" aria-label="Investigation status">
+    <div class="rail-title">
+      <h1>VECTOR <span>Command Center</span></h1>
+      <p id="src-banner" class="src">Loading investigation…</p>
+    </div>
+    <dl id="rail-stats"></dl>
+    <div class="legend" aria-label="Status legend">
+      <h2>Reading the board</h2>
+      <ul>
+        <li><i class="dot ok"></i>Executed · evidence recorded</li>
+        <li><i class="dot warn"></i>Partial · limited evidence</li>
+        <li><i class="dot bad"></i>Failed or unavailable</li>
+        <li><i class="dot idle"></i>Never invoked</li>
+      </ul>
+      <p class="note">Only stages with recorded events light up. Dim stages did not execute.</p>
+    </div>
+  </aside>
+  <main id="stage">
+    <div id="canvas-wrap">
+      <svg id="graph" role="img" aria-label="VECTOR investigation topology"></svg>
+      <div id="zoombar" role="toolbar" aria-label="Graph zoom">
+        <button id="zin" type="button" aria-label="Zoom in">+</button>
+        <button id="zout" type="button" aria-label="Zoom out">−</button>
+        <button id="zreset" type="button">Reset view</button>
+      </div>
+    </div>
+    <div id="transport" aria-label="Replay controls">
+      <button id="play" type="button" aria-label="Play replay">▶</button>
+      <input id="scrub" type="range" min="0" max="100" value="100" step="1" aria-label="Replay position">
+      <span id="tick" class="mono">—</span>
+    </div>
+  </main>
+  <aside id="inspector" aria-label="Node detail" aria-live="polite">
+    <p class="empty">Select a stage to inspect its real claims, evidence and activity.</p>
+  </aside>
+</div>
+<script src="/command.js"></script>
+</body>
+</html>

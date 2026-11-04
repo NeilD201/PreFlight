@@ -1,0 +1,109 @@
+
+
+
+
+
+
+
+
+
+
+
+# API keys and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Browser automation and temporary files
+.playwright-mcp/
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Python bytecode and test/tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local environments and bundled runtimes
+.venv/
+venv/
+env/
+.deps/
+.dist/
+dist/
+build/
+
+# Local app data, reports, databases, and logs
+reports/
+data/
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.*
+credentials.*
+
+# User design files and manufacturing exports (keep private project data local)
+*.kicad_pcb
+*.kicad_sch
+*.kicad_pro
+*.kicad_prl
+*.kicad_dru
+*.kicad_wks
+*.kicad_mod
+*.kicad_sym
+*.kicad_lib_table
+*.gbr
+*.gerber
+*.drl
+*.pos
+*.bom.csv
+*.step
+*.stp
+*.zip
+*.7z
+*.rar
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Temporary debugging screenshots
+audit-*.png
+macro-*.png
+ux-*.png
+empty-*.png
+
+# Debugging reports
+DEBUG_REPORT.md
+DEBUG_VERIFICATION_REPORT.md
+OVERNIGHT_TEST_REPORT.md
+SUPERVISOR_INBOX.md
+UX_KICAD_AUDIT.md
+CHECKER_AUDIT.md
+ENGINEERING_ACCURACY_BASELINE.md
+RELEASE_READINESS_REPORT.md
+conversation-*.txt
+
+# Bundled demo KiCad projects MUST be published (this negation comes after
+# the user-design patterns above, so the demos are tracked).
+!demo-projects/**

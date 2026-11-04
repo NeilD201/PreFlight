@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{title}} · PCB preflight</title><style>{{styles}}</style></head>
+<body>
+<main>
+<header><div class="eyebrow">PCB PREFLIGHT / PROJECT REVIEW</div><h1>{{title}}</h1>
+<p class="subtitle">{{headline}}</p>
+<p class="meta">{{date}} · KiCad {{engine}} · <a href="report.json">Download full JSON</a></p></header>
+<section class="metrics" aria-label="Summary">
+<div><span>Components</span><strong>{{components_count}}</strong></div>
+<div class="error"><span>Discrepancy groups</span><strong>{{fix_count}}</strong></div>
+<div class="warning"><span>Need context / review</span><strong>{{review_count}}</strong></div>
+<div><span>AI review</span><strong class="status-text">{{ai_status}}</strong></div>
+</section>
+<p class="hint summary-note">Counts above are grouped actions. Original rule counts: {{errors}} errors, {{warnings}} warnings, {{information}} notices. One physical item can trigger several rules.</p>
+<details class="coverage"><summary>Check coverage</summary><p>{{coverage}}</p><ul>{{checks}}</ul>
+<p>Net comparison checks pad assignments. KiCad DRC checks routing using saved rules and existing zone fills. Sourced part rules cover MCP73831 DFN exposed pads and MAX30102 NC pads. Other datasheet requirements, supplier compatibility, firmware and manufacturer-specific limits remain unverified. This report does not establish production readiness.</p></details>
+<nav aria-label="Report sections"><button class="active" data-tab="review" aria-pressed="true">What matters</button>
+<button data-tab="ai" aria-pressed="false">AI review</button><button data-tab="circuit" aria-pressed="false">Circuit context</button>
+<button data-tab="components" aria-pressed="false">Components &amp; pins</button><button data-tab="nets" aria-pressed="false">Nets</button>
+<button data-tab="findings" aria-pressed="false">Raw findings</button></nav>
+<div class="toolbar"><label>Search<input id="search" type="search" placeholder="Reference, net, rule, or message…"></label>
+<label id="focus-label">Show<select id="focus"><option value="attention">Needs attention</option><option value="all">Everything</option><option value="electrical">Circuit / connectivity</option><option value="manufacturing">Fabrication limits</option><option value="assembly">Assembly</option><option value="documentation">Schematic / library setup</option><option value="cosmetic">Cosmetic</option><option value="expected">Expected / excluded</option><option value="coverage">Checks unavailable</option></select></label>
+<label id="severity-label" hidden>Engine severity<select id="severity"><option value="all">All severities</option><option value="error">Errors</option><option value="warning">Warnings</option><option value="info">Information</option></select></label>
+<span id="visible-count" aria-live="polite"></span></div>
+<section id="review" class="panel"><p class="hint">These explanations come from local rules and cited part requirements. Each card preserves links to its original evidence. Cosmetic and expected findings are available in the Show menu.</p>{{review}}</section>
+<section id="ai" class="panel" hidden>{{ai}}</section>
+<section id="circuit" class="panel" hidden>{{circuit}}</section>
+<section id="findings" class="panel" hidden><p class="hint">Original findings and severities are preserved here. ERC coordinates from KiCad 9.0.5 JSON can be incorrectly scaled; use the component/pin identifiers to locate them.</p>{{issues}}</section>
+<section id="components" class="panel" hidden><p class="hint">Expand a component to compare its schematic pins with its PCB pads.</p>{{components}}</section>
+<section id="nets" class="panel" hidden><div class="table-scroll"><table><thead><tr><th>Source</th><th>Net</th><th>Pins</th><th>Members</th></tr></thead><tbody>{{nets}}</tbody></table></div></section>
+<p id="empty" hidden>No matches in this view. Try a different search or choose Everything.</p>
+<footer>Generated locally. Source KiCad files are unchanged.</footer>
+</main><script>{{script}}</script></body></html>

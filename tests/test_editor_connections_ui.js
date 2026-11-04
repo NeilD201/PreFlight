@@ -1,0 +1,31 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const elements=new Map();
+function element(id){if(!elements.has(id))elements.set(id,{value:'',textContent:'',disabled:false,close(){this.closed=true;},requestSubmit(){this.submitted=(this.submitted||0)+1;},querySelectorAll(){return [];},querySelector(){return element('submit');}});return elements.get(id);}
+const context=vm.createContext({console,$:element,app:{busy:false,config:{},snapshot:{report_id:'current'}},workflow:{revisionBase:null},showError:error=>{context.error=error.message;},connectOriginalFiles:()=>{},navigate:()=>{}});
+vm.runInContext(fs.readFileSync('web/editor-connections.js','utf8'),context);
+(async()=>{
+  assert.equal(vm.runInContext("editorConnectionLabel({status:'watching',review_outdated:true})",context),'New save · review is out of date');
+  assert.equal(vm.runInContext("editorConnectionLabel({status:'saving'})",context),'Saving…');
+  let writes=0,release;
+  context.api=async()=>{writes++;return new Promise(resolve=>{release=resolve;});};
+  vm.runInContext('loadEditorConnections=async()=>{};',context);
+  const first=vm.runInContext("editorConnectionAction(()=>api('/api/editor-connect',{}))",context);
+  await vm.runInContext("editorConnectionAction(()=>api('/api/editor-connect',{}))",context);
+  assert.equal(writes,1,'A double click must not connect twice');
+  release({id:'one'});await first;
+  context.api=async()=>({path:'/project',files:{}});
+  vm.runInContext("editorConnectionsUI.connections=[{id:'one',current_report:true}];",context);
+  await vm.runInContext("useEditorConnection('one')",context);
+  assert.equal(context.workflow.revisionBase,'current');
+  assert.equal(element('run-form').submitted,1,'Review button must start a review, not just focus another button');
+  vm.runInContext("editorConnectionsUI.connections=[{id:'two',current_report:false}];",context);
+  await vm.runInContext("useEditorConnection('two')",context);
+  assert.equal(context.workflow.revisionBase,null,'Never compare unrelated projects');
+  context.app.busy=true;
+  await vm.runInContext("useEditorConnection('one')",context);
+  assert.equal(element('run-form').submitted,2);
+  assert.match(context.error,/current check/);
+  console.log('Editor connections: duplicate clicks, busy state, review action and project isolation passed');
+})().catch(error=>{console.error(error);process.exitCode=1;});
