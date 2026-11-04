@@ -12,7 +12,9 @@ See [project structure and data flow](docs/PROJECT_STRUCTURE.md) for a source
 map, outbound service list, and local-data notes before publishing or sharing.
 Two bundled demo boards (`demo-projects/ModularKeyboard wrong` and
 `demo-projects/ModularKeyboard correct`) open with one click from the Projects
-page — no upload needed.
+page — no upload needed. Both boards are the developer's WenneBoard project
+(see [DEMO_GUIDE.md](DEMO_GUIDE.md) for the full WenneBoard product context
+that ships with each demo).
 
 ## Quick Start for Judges (under two minutes)
 
