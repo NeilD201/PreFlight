@@ -95,8 +95,10 @@ class StateTests(unittest.TestCase):
         with self.assertRaises(AppError):
             self.state.link_local_names(str(self.source),['../outside.kicad_sch','example.kicad_pro','example.kicad_pcb'])
         fresh=tempfile.TemporaryDirectory();self.addCleanup(fresh.cleanup)
+        tmp_state=AppState(Path(fresh.name)/'proj',Path(fresh.name)/'rep')
+        self.addCleanup(tmp_state.close)
         with self.assertRaises(AppError):
-            AppState(Path(fresh.name)/'proj',Path(fresh.name)/'rep').link_local_names(None,['a.kicad_pro'])
+            tmp_state.link_local_names(None,['a.kicad_pro'])
 
     def test_local_file_link_accepts_hierarchical_sheets(self):
         root=self.source/'board.kicad_sch'

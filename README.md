@@ -14,6 +14,24 @@ Two bundled demo boards (`demo-projects/ModularKeyboard wrong` and
 `demo-projects/ModularKeyboard correct`) open with one click from the Projects
 page — no upload needed.
 
+## Quick Start for Judges (under two minutes)
+
+1. **Install:** Python 3.10+ (python.org, or `py -3` on Windows), then in the
+   cloned folder: `python3 -m venv .venv && source .venv/bin/activate`
+   (Windows: `py -3 -m venv .venv && .venv\Scripts\activate`), then
+   `pip install -r requirements.txt`. Optional but recommended: KiCad 9+
+   (kicad.org) for native ERC/DRC checks — without it those checks report
+   NOT PERFORMED instead of guessing.
+2. **Launch:** `python main.py --web` and open the printed URL.
+3. **API key (only needed for AI answers):** get a Meta API key with Muse
+   Spark 1.3 Contributor access, then paste it in **Vector settings → Save &
+   test**, or put `LLAMA_API_KEY=your-key` in an untracked `.env` file
+   (see `.env.example`). Without a key, all local checks, findings, and
+   previews still work; AI review and Vector answers report unavailable.
+4. **Demo:** open **ModularKeyboard Wrong**, press **Check my board**, inspect
+   the USB-C CC and LED-resistor findings, ask Vector a follow-up, then open
+   **ModularKeyboard Correct** to compare. See the full walkthrough below.
+
 ## What PreFlight is (and is not)
 
 PreFlight reviews an **existing PCB design before manufacturing**: it reads your
