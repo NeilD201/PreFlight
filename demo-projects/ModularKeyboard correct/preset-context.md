@@ -1,8 +1,9 @@
 # Demo preset — ModularKeyboard correct (WenneBoard, fixed reference)
 
-WenneBoard is a custom modular 75% ISO mechanical keyboard ("~82-key" class:
-81 fitted keyswitches SW3–SW83 plus 2 rotary encoders) built around an RP2040
-microcontroller (U2) with external QSPI flash (U5 W25Q128JVS, 128 Mbit).
+WenneBoard is a custom modular mechanical keyboard — a 75% ISO design
+("~82-key" class: 81 fitted keyswitches SW3–SW83 plus 2 rotary encoders)
+built around an RP2040 microcontroller (U2) with external QSPI flash
+(U5 W25Q128JVS, 128 Mbit).
 Hot-swappable MX-compatible switches and the desktop configuration software
 are the developer's product statements, not facts read from these files.
 
