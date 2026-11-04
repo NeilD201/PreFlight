@@ -4,8 +4,17 @@ WenneBoard is a custom modular mechanical keyboard — a 75% ISO design
 ("~82-key" class: 81 fitted keyswitches SW3–SW83 plus 2 rotary encoders)
 built around an RP2040 microcontroller (U2) with external QSPI flash
 (U5 W25Q128JVS, 128 Mbit).
-Hot-swappable MX-compatible switches and the desktop configuration software
-are the developer's product statements, not facts read from these files.
+Hot-swappable MX-compatible switches are the developer's product statement,
+not a fact read from these files.
+
+## Developer-reported project status (not independently verified from files)
+
+WenneBoard is a functional project: the main keyboard and one expansion
+module have been built and tested. Multiple modules can connect
+simultaneously, and the architecture supports additional module designs;
+other modules (e.g. a touchpad) remain concepts. The custom desktop
+configuration software is implemented, as is the QMK-based firmware with
+custom software integration. Certification is still pending.
 
 ## Verified hardware (read from this schematic and PCB — do not re-ask)
 
@@ -33,10 +42,10 @@ wrong" to see each resolved finding disappear):
   files. Expect idle buses until a module is attached; confirm any
   module's power draw and address before approval.
 
-## Firmware assumptions (intended, NOT in the KiCad files — confirm)
+## Firmware assumptions (developer-reported as implemented — confirm details)
 
-- QMK-based firmware with custom desktop configuration software (developer
-  statement; no firmware source is bundled here).
+- QMK-based firmware with custom desktop software integration (no firmware
+  source is bundled here; behavior below is intended, not measured).
 - Encoders: volume up/down on rotation, mute on press. RGB: short boot
   animation, then per-key lighting. Standard USB HID layout, matrix mapped
   left-to-right, top-to-bottom.

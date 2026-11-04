@@ -12,9 +12,13 @@ See [project structure and data flow](docs/PROJECT_STRUCTURE.md) for a source
 map, outbound service list, and local-data notes before publishing or sharing.
 Two bundled demo boards (`demo-projects/ModularKeyboard wrong` and
 `demo-projects/ModularKeyboard correct`) open with one click from the Projects
-page — no upload needed. Both boards are the developer's WenneBoard project
-(see [DEMO_GUIDE.md](DEMO_GUIDE.md) for the full WenneBoard product context
-that ships with each demo).
+page — no upload needed. Both boards are the developer's WenneBoard project:
+[wrong-board context](demo-projects/ModularKeyboard%20wrong/preset-context.md)
+and [correct-board context](demo-projects/ModularKeyboard%20correct/preset-context.md)
+(full text in [DEMO_GUIDE.md](DEMO_GUIDE.md)). After opening a demo and
+running an analysis, load it via **Project context → Load preset → Save
+context** so Vector can use the detailed WenneBoard information in
+future reviews.
 
 ## Quick Start for Judges (under two minutes)
 
