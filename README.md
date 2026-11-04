@@ -17,11 +17,11 @@ page — no upload needed.
 ## Quick Start for Judges (under two minutes)
 
 1. **Install:** Python 3.10+ (python.org, or `py -3` on Windows), then in the
-   cloned folder: `python3 -m venv .venv && source .venv/bin/activate`
-   (Windows: `py -3 -m venv .venv && .venv\Scripts\activate`), then
-   `pip install -r requirements.txt`. Optional but recommended: KiCad 9+
-   (kicad.org) for native ERC/DRC checks — without it those checks report
-   NOT PERFORMED instead of guessing.
+   cloned folder create and activate a venv (exact PowerShell vs Command
+   Prompt commands in SETUP.md §3), then `pip install -r requirements.txt`.
+   Optional but recommended: KiCad 9+ (kicad.org) for native ERC/DRC and
+   manufacturing checks — without it those checks report NOT PERFORMED
+   instead of guessing.
 2. **Launch:** `python main.py --web` and open the printed URL.
 3. **API key (only needed for AI answers):** get a Meta API key with Muse
    Spark 1.3 Contributor access, then paste it in **Vector settings → Save &
@@ -29,8 +29,9 @@ page — no upload needed.
    (see `.env.example`). Without a key, all local checks, findings, and
    previews still work; AI review and Vector answers report unavailable.
 4. **Demo:** open **ModularKeyboard Wrong**, press **Check my board**, inspect
-   the USB-C CC and LED-resistor findings, ask Vector a follow-up, then open
-   **ModularKeyboard Correct** to compare. See the full walkthrough below.
+   the C105 capacitor and LED-resistor findings (USB-C CC detail and Vector
+   follow-ups need the key), then open **ModularKeyboard Correct** to
+   compare. See the full walkthrough below.
 
 ## What PreFlight is (and is not)
 
@@ -56,16 +57,19 @@ evidence — citations required, nothing accepted on a model's word alone.
    copy — the bundled originals are never modified.
 3. Press **Check my board**. The local analysis runs on your machine (tens of
    seconds) with no API key.
-4. Find **“USB-C CC resistors missing or out of spec”** on USB-C connector J1:
-   the wrong board's CC pull-downs don't meet the USB-C spec.
-5. Open the finding: schematic/PCB evidence, the pins and nets involved, and
+4. Open **R001 — 100 µF capacitor (C105)**: rails (+5V, +3.3V), regulators,
+   and every powered load pin, with steps naming exactly what is unverified.
+   Open **R005 — LED series resistance (R12–R14)** for the screening
+   estimate. (The USB-C CC pull-down detail appears with a Meta key's
+   Vector review, not in the free local pass.)
+5. Open a finding: schematic/PCB evidence, the pins and nets involved, and
    what would need to change. With a Meta key configured, ask Vector a
    follow-up (e.g. why the value matters); without a key this step reports
    itself as unavailable instead of guessing.
-6. Open **ModularKeyboard Correct** and compare: the same check passes there.
-7. Explore the other findings (LED series resistors R12–R14, regulator
-   capacitors, ESD protection) and the board preview, schematic view, and
-   manufacturing checks.
+6. Open **ModularKeyboard Correct** and compare: the same checks pass there.
+7. Explore the other findings (regulator pads, copper clearance, ESD
+   protection) and the board preview, schematic view, and manufacturing
+   checks.
 
 A full AI review of a 400+-part board takes several minutes and a few cents of
 Meta credit; nothing in the walkthrough above requires it.

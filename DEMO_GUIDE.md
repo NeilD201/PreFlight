@@ -1,68 +1,77 @@
-# PreFlight — 3-Minute Demo Guide
+# PreFlight — 5-Minute Demo Guide (fresh clone)
 
-Record against the release candidate directory below. Do not invent results:
-every screen in this script was verified with real browser tests.
+Runs against a clean checkout of this repository. No saved reports, databases,
+or API keys are assumed — every step below starts from the bundled files.
 
 ## Launch
 
-Directory: the release-candidate folder handed off with this guide
-(`PreFlight-ReleaseCandidate`).
-
-```bash
-cd /tmp/PreFlight-ReleaseCandidate
-python3 main.py --web --port 8823 --no-browser
+```sh
+git clone https://github.com/NeilD201/PreFlight.git
+cd PreFlight
+python3 -m venv .venv && source .venv/bin/activate   # Windows: py -3 -m venv .venv
+pip install -r requirements.txt
+python main.py --web
 ```
 
-Open: **http://127.0.0.1:8823** (any free port works: replace `8823`).
+(Windows: `py -3 main.py --web`, or double-click **Start PCB Preflight.bat**;
+macOS: double-click **Start PCB Preflight.command**, or `./start-preflight.sh`.
+See SETUP.md for PowerShell vs Command Prompt details.)
 
-No API key is needed for the local demo. A Meta key is only required for
-the optional Vector review at the end.
+Open the printed URL (default **http://127.0.0.1:8765**).
 
-## The 3-minute run
+## The 5-minute run (no API key needed)
 
-**0:00 — Projects.** Click **Projects**. Two bundled demo boards are listed:
+**Projects.** Open the **Projects** page. Two bundled demo boards are listed:
 **ModularKeyboard wrong** (faulty) and **ModularKeyboard correct** (fixed).
 
-**0:20 — Open the faulty board.** Click **Open board** on ModularKeyboard
-wrong. The workspace renders with a visible **Check my board** button.
+**Open the faulty board.** Click **Open board** on ModularKeyboard wrong.
+It opens as a disposable working copy — the bundled originals are never
+modified. A visible **Check my board** button renders in the workspace.
 
-**0:40 — Local analysis (free).** Make sure AI review and datasheet lookups
-are off, then click **Check my board**. Deterministic KiCad checks run
-locally — no API credits, no key needed. Watch findings appear.
+**Local analysis (free).** Leave **Include Vector review** unticked (no key
+needed) and click **Check my board**. Deterministic checks run locally;
+findings appear with components, nets, pins, and evidence.
 
-**1:10 — The evidence-aware C105 finding.** Open the finding
-**C105 (+1 same-value part)**. It names the rails (+5V, +3.3V), the
-regulators, and every powered load pin (D100 pin 4 VDD, U3, U8) — not
-generic rating advice. Steps name exactly what is unverified.
+**Read verified findings.** All of these come from the free local analysis:
 
-**1:40 — Saved Vector investigation (no new spend).** Open **Projects**,
-find the saved **falsch** report with a completed Vector review, and click
-**Open review**. The Vector review tab shows validated AI actions —
-e.g. **R001** on C105/C106 with the badge
-**AI guidance from supplied evidence** — plus **Review diagnostics**
-listing the one rejected conclusion and why. Replaying this costs nothing.
+- **R001 — 100 µF capacitor (C105) (+1 same-value part):** names the supply
+  rails (+5V, +3.3V), the regulators, and every powered load pin
+  (D100 pin 4 VDD, U3, U8) — not generic rating advice. Steps name exactly
+  what is unverified.
+- **R005 — LED series resistance (R12, R13, R14):** the screening estimate
+  (~0.13 mA) shows the 10 kΩ values starve the LEDs.
 
-**2:10 — Project description.** Click **Product details**. The
-**Tell PreFlight about your project** box leads: type a description, click
-**Save & analyse**. Saving spends nothing; a paid Vector run always asks
-first (**Run Vector investigation** / **Save only**).
+**Reset and isolation.** **Reset this project** restores an unreviewed,
+pristine copy. **Open in KiCad** opens the disposable working copy, never
+the bundled originals.
 
-**2:40 — Fix Design (safe).** Open a finding and click
-**Plan coordinated fix**. The plan is prepared on an isolated copy;
-nothing edits the original files until approval and export.
+## With a Meta API key (optional)
+
+Add the key in **Vector settings → Save & test** (or `LLAMA_API_KEY` in an
+untracked `.env` file), then tick **Include Vector review** before
+**Check my board**. Answer the product questions (**Enter all details** puts
+them on one page; **Not sure yet** is always acceptable). The **Vector
+review** tab then adds AI-verified guidance — e.g. the USB-C CC finding with
+an exact orderable part and quoted datasheet excerpts — plus
+**Review diagnostics** for anything the AI could not establish. Follow-up
+questions (**Ask about this run** → **Send question**) reuse the saved
+review evidence without rerunning KiCad. **Plan coordinated fix** prepares
+repairs on an isolated copy; nothing edits originals without approval.
 
 ## Do NOT demonstrate
 
 - Breadboard to PCB / LiveScan (experimental, not part of this release).
 - Firmware generation (experimental, labeled as such in the UI).
 - A fresh paid Vector review on camera (it takes minutes and spends
-  credits; show the saved completed review instead).
+  credits; replay a saved completed review instead).
 
 ## Honest limitations to state on camera
 
 - Local checks cannot certify a board safe; unresolved items stay marked.
 - A finding without a retrieved IC datasheet names the missing part
   instead of guessing.
-- The 30-minute in-memory review cache reuses only identical, fully
-  validated reviews; any changed evidence, source file, context, model,
-  or credential runs fresh.
+- Saved reviews are reused from memory for up to 30 minutes only when the
+  evidence, sources, context, model, and credentials are identical;
+  anything changed runs fresh.
+- KiCad 9+ is required for native ERC/DRC and manufacturing checks;
+  without it those checks report NOT PERFORMED.

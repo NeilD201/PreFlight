@@ -8,8 +8,8 @@ macOS (Python 3.15); Python 3.10+ is required on all platforms.
 ## 1. Get the code
 
 ```sh
-git clone <new-repository-url>
-cd PreFlight_Submission   # whatever the folder is named when cloned
+git clone https://github.com/NeilD201/PreFlight.git
+cd PreFlight   # whatever the folder is named when cloned
 ```
 
 Any folder name works — imports resolve through the bundled `_pcb_bootstrap`
@@ -28,15 +28,36 @@ Verify: `python3 --version` (Windows: `py -3 --version`).
 
 The environment lives inside the project folder (`.venv`):
 
+Easiest option per OS (no manual venv needed):
+
+- **Windows:** double-click **Start PCB Preflight.bat** — it creates
+  `.venv`, installs dependencies, and starts the app.
+- **Windows PowerShell alternative:** right-click **Start-Preflight.ps1** →
+  Run with PowerShell (or `.\Start-Preflight.ps1` from the folder).
+- **macOS:** double-click **Start PCB Preflight.command**.
+- **macOS / Linux terminal:** `./start-preflight.sh`.
+
+Manual setup (any OS, when you prefer to control the environment):
+
 ```sh
+# macOS / Linux:
 python3 -m venv .venv
-source .venv/bin/activate        # macOS / Linux
-.venv\Scripts\activate.bat       # Windows
+source .venv/bin/activate
 ```
 
-Windows shortcut: double-click **Start PCB Preflight.bat** (creates the
-environment and installs dependencies on first run, then starts the app).
-macOS equivalent: **Start PCB Preflight.command**.
+```powershell
+# Windows PowerShell:
+py -3 -m venv .venv
+.venv\Scripts\Activate.ps1
+# If PowerShell blocks the script, run once:
+# Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+```bat
+:: Windows Command Prompt:
+py -3 -m venv .venv
+.venv\Scripts\activate.bat
+```
 
 ## 4. Install dependencies
 
@@ -75,7 +96,8 @@ $env:LLAMA_API_KEY="your-key-here"
 set LLAMA_API_KEY=your-key-here
 
 # Any OS, remembered for this project (untracked file, never commit it):
-cp .env.example .env
+cp .env.example .env        # macOS / Linux / Windows PowerShell
+copy .env.example .env      # Windows Command Prompt
 # then edit .env and set LLAMA_API_KEY=your-key-here
 ```
 
@@ -122,7 +144,7 @@ python main.py --web
 
 Then open **http://127.0.0.1:8765** in a browser (the exact URL is printed;
 add `--port 8766` if the default port is busy). The version pill in the top
-bar (currently `v1.03`) confirms which code is serving.
+bar (currently `v1.04`) confirms which code is serving.
 
 Useful variants:
 
@@ -140,16 +162,19 @@ Stop with Ctrl+C in the terminal.
    (**ModularKeyboard wrong**, **ModularKeyboard correct**) are listed with
    an **Open board** button. No upload needed.
 2. Open **ModularKeyboard wrong** and run the Vector review with
-   **Include AI review** ticked (needs the Meta key).
+   **Include Vector review** ticked (needs the Meta key from step 5 of the
+   setup above; without a key leave it unticked for a free local analysis).
 3. Answer the product questions, or use **Enter all details** to answer
    everything on one page. “Not sure yet” is always acceptable.
 4. Open the finished report: findings cite components, nets, pins, and
-   evidence. The USB finding names an exact orderable part (**SRV05-4**)
-   with quoted datasheet excerpts (`D:C2836319`).
-5. Try **Ask about it** on any finding, and **Fix this issue** on a
-   supported finding (deterministic value fixes apply in seconds with no
-   key; research-backed repairs need the key). Repairs apply to disposable
-   copies and are re-verified.
+   evidence. With the AI review enabled, the USB finding names an exact
+   orderable part (**SRV05-4**) with quoted datasheet excerpts
+   (`D:C2836319`); without a key you still get the deterministic findings
+   (e.g. R001 capacitor rails, R005 LED resistors).
+5. Try **Ask follow-up** on any finding (Vector review tab), and
+   **Fix this issue** on a supported finding (deterministic value fixes
+   apply in seconds with no key; research-backed repairs need the key).
+   Repairs apply to disposable copies and are re-verified.
 
 ## 9. Reading a verdict
 
