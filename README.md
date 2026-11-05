@@ -1,5 +1,7 @@
 # PCB Preflight — circuit review and manufacturing handoff
 
+_Preflight was completely built during the hackathon._
+
 > 🎬 **Hackathon demo video:** _link coming soon — placeholder for the recorded
 > walkthrough (wrong board → findings → SRV05-4 prescription → disposable fix)._
 
